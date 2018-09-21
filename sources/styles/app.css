@@ -1,0 +1,71 @@
+.form .webix_header{
+	margin: 0 !important;
+	padding: 0 !important;
+	width: 100% !important;
+}
+
+.form .webix_header .webix_template{
+	background: #efefef;
+	color: #727072;
+	border-bottom: 1px solid #dddddd;
+}
+
+.form .webix_el_box label{
+	text-align: right !important;
+	font-weight: bold;
+	padding-right: 20px;
+}
+
+.grayToolbar.webix_toolbar{
+	background: #efefef;
+}
+
+.grayToolbar.webix_toolbar .webix_el_label, .grayToolbar.webix_toolbar .webix_el_button button {
+	color: #727072;
+}
+
+.grayToolbar.webix_toolbar .webix_img_btn:hover, .grayToolbar.webix_toolbar .webix_img_btn:focus, .grayToolbar.webix_toolbar .webix_img_btn:active{
+	background: #efefef;
+	box-shadow: none;
+	color:#3498db;
+}
+
+.form .forgoutPassword button, .form .forgoutPassword button:active{
+	box-shadow: none;
+	color:#3498db;
+	background: white;
+}
+
+.form .forgoutPassword button:hover{
+	color:black;
+}
+
+.remember .webix_el_box label{
+	font-weight: normal;
+}
+
+.form .webix_el_text .webix_inp_bottom_label{
+	color:red;
+	font-weight: 600;
+	padding-left:10px;
+}
+
+.flex-container{
+	padding:20px 0px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: stretch;
+}
+
+.flex-container div{
+	flex-basis:50%;
+}
+
+.flex-container .information{
+	margin:30px;
+}
+
+.flex-container div span{
+	display:block;
+	margin:20px 0px;
+}
