@@ -25,7 +25,7 @@ export default class NewBookView extends JetView{
 					accept:"image/jpeg, image/png",
 					autosend:false,
 					multiple:false,
-					upload:"/server/upload",
+					upload:"/server/books",
 					value:"Загрузить картинку книги",
 					on:{
 						onAfterFileAdd:()=>{
@@ -41,7 +41,7 @@ export default class NewBookView extends JetView{
 					accept:"text/plain, application/pdf",
 					autosend:false,
 					multiple:true,
-					upload:"/server/upload",
+					upload:"/server/books",
 					value:"Добавить электронные версии книги",
 					on:{
 						onAfterFileAdd:()=>{
@@ -54,10 +54,9 @@ export default class NewBookView extends JetView{
 					localId: "audioUploader",
 					inputWidth:300,
 					select:true,
-					accept:"audio/mpeg3",
 					autosend:false,
 					multiple:false,
-					upload:"/server/upload",
+					upload:"/server/books",
 					value:"Загрузить аудиоверсию книги",
 					on:{
 						onAfterFileAdd:()=>{
@@ -67,39 +66,46 @@ export default class NewBookView extends JetView{
 				},
 				{view:"button", value:"Add new book", inputWidth:300, type:"form", click:()=>{
 					let data = this.$$("form").getValues();
-					console.log(this.$$("pictureUploader").files);
-					this.$$("pictureUploader").files.data.each((file)=>{
-						// file.formData = {"id": result, field:"picture"};
-						// this.$$("pictureUploader").send();
+
+					webix.ajax().post("/server/books", data, (result)=>{
+						this.$$("pictureUploader").files.data.each((file)=>{
+							file.formData = {"id": result, "field":"picture"};
+							this.$$("pictureUploader").send();
+						});
+						let length = this.$$("filesUploader").files.data.order.length;
+						let index = 1;
+						let data = "";
+						this.$$("filesUploader").files.data.each((file)=>{
+							if(length != index){
+								data += file.name + ", ";
+								file.formData = {"id": result, field:"files", filesData:""};
+							}
+							else {
+								data += file.name + ", ";
+								file.formData = {"id": result, field:"files", filesData:data};
+							}
+							index++;
+						});
+						this.$$("filesUploader").send();
+
+						length = this.$$("audioUploader").files.data.order.length;
+						index = 1;
+						data = "";
+						this.$$("audioUploader").files.data.each((file)=>{
+							if(length != index){
+								data += file.name + ", ";
+								file.formData = {"id": result, field:"audio", filesData:""};
+							}
+							else {
+								data += file.name + ", ";
+								file.formData = {"id": result, field:"audio", filesData:data};
+							}
+							index++;
+						});
+						this.$$("audioUploader").send();
 					});
-					// webix.ajax().post("/server/books", data, (result)=>{
-					//     console.log(result);
-					//     this.$$("pictureUploader").files.data.each((file)=>{
-					//         file.formData = {"id": result, field:"picture"};
-					//         this.$$("pictureUploader").send();
-					//     });
-					//     // this.$$("filesUploader").files.data.each((file)=>{
-					//     //     file.formData = {"id": result, field:"files"};
-					//     //     this.$$("filesUploader").send();
-					//     // });
-					//     // this.$$("pictureUploader").files.data.each((file)=>{
-					//     //     file.formData = {"id": result, field:"picture"};
-					//     //     this.$$("pictureUploader").send();
-					//     // });
-					// });
-					// .data.each((file)=>{
-					//     pictureFiles.push(file);
-					// let values = this.$$("form").getValues();
-					// values.pictureFiles = this.$$("pictureUploader").files;
-					// values.docFiles = this.$$("filesUploader").files;
-					// values.audioFiles = this.$$("audioUploader").files;
-					//     // file.formData = values;
-                    
-					// this.$$("filesUploader").send();
-					// // });
-					// console.log(values);
-                    
-					// this.$$("pi")
+
+
 				}}
 			]
 		};

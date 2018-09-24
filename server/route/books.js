@@ -17,52 +17,105 @@ let booksData = {
 		"`publish_country` VARCHAR(20) NOT NULL," +
 		"`genres` VARCHAR(100) NOT NULL," +
 		"`amount_paper_book` INT NOT NULL," +
-		"`files` VARCHAR(200) NULL," +
-		"`audio` VARCHAR(200) NULL," +
+		"`files` VARCHAR(600) NULL," +
+		"`audio` VARCHAR(600) NULL," +
 		"`rating` INT DEFAULT '0'," +
-		"PRIMARY KEY (`book_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;", function(err){
+		"PRIMARY KEY (`book_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;", (err,result)=>{
 			if (err) throw err;
-			console.log("Table 'books' is created");
+			if(result.warningCount === 0){
+				console.log("Table 'books' is created");
+				this.startInitTable();
+			}	
 		});
 	},
 
 	addData(req,res){
-		let query = `INSERT INTO library.books (book_name, page_amount, year, author_surname, author_name, author_patronymic, publisher, publish_country, genres, amount_paper_book) values ('${req.body.book_name}', "${req.body.page_amount}", "${req.body.year}", "${req.body.author_surname}", "${req.body.author_name}", "${req.body.author_patronymic}", "${req.body.publisher}", "${req.body.publish_country}", "${req.body.genres}", "${req.body.amount_paper_book}");`;
-		fs.appendFileSync("./books.txt", query+"\n");
-		con.con.query(query, function(err, result){
+		req.body = JSON.parse(JSON.stringify(req.body));
+		if(req.body.hasOwnProperty("field")){
+			if(req.body.hasOwnProperty("filesData")){
+				if(req.body.filesData != ""){
+					let query = `UPDATE library.books SET ${req.body.field}='${req.body.filesData}' WHERE book_id = ${req.body.id};`;
+					fs.appendFileSync("./books.txt", query+"\n");
+					con.con.query(query, function(err){
+						if(err){
+							console.log(err);
+							res.status(500).send(err);
+						}
+						else{
+							res.json({});
+						}
+					});
+				}
+				else res.json({});
+			}
+			else {
+				let query = `UPDATE library.books SET ${req.body.field}='${req.file.originalname}' WHERE book_id = ${req.body.id};`;
+				fs.appendFileSync("./books.txt", query+"\n");
+				con.con.query(query, function(err){
+					if(err){
+						console.log(err);
+						res.status(500).send(err);
+					}
+					else{
+						res.json({});
+					}
+				});
+			}
+		}
+		else {
+			let query = `INSERT INTO library.books (book_name, page_amount, year, author_surname, author_name, author_patronymic, publisher, publish_country, genres, amount_paper_book) values ('${req.body.book_name}', "${req.body.page_amount}", "${req.body.year}", "${req.body.author_surname}", "${req.body.author_name}", "${req.body.author_patronymic}", "${req.body.publisher}", "${req.body.publish_country}", "${req.body.genres}", "${req.body.amount_paper_book}");`;
+			fs.appendFileSync("./books.txt", query+"\n");
+			con.con.query(query, function(err, result){
+				if(err){
+					console.log(err);
+					res.status(500).send(err);
+				}
+				else{
+					res.json(result.insertId);
+				}
+			});
+		}
+	},
+    
+	startInitTable(){
+		fs.readFile("./books.txt", "utf8", 
+			function(error,data){
+				if(error) throw error; 
+				let mass = data.split(";");
+				mass.pop();
+				for(let i=0;i<mass.length;i++){
+					con.con.query(mass[i], (err)=>{
+						if (err) throw err;
+						console.log("Table 'books' is initialized");
+					});
+				}
+				
+			});
+	},
+
+	allFiles(req,res){
+		con.con.query("select * from books", (err, result)=>{
 			if(err){
-				console.log(err);
 				res.status(500).send(err);
+				console.log(err);
 			}
 			else{
-				// console.log(result);
-				res.json(result.insertId);
+				res.json(result);
 			}
 		});
 	},
 
-	addFiles(req,res){
-		let query = `UPDATE library.books SET ${req.body.field}='${req.file.originalname}' WHERE book_id = ${req.body.id};`;
-		fs.appendFileSync("./books.txt", query+"\n");
-		con.con.query(query, function(err, result){
+	deleteBook(req,res){
+		con.con.query(`delete from books where book_id=${req.body.book_id}`, (err,result)=>{
 			if(err){
-				console.log(err);
 				res.status(500).send(err);
+				console.log(err);
 			}
 			else{
-				res.json({});
+				res.json(result);
 			}
 		});
-	},
-    
-	// startInitTable(con){
-	//     con.query("INSERT INTO `library`.`users` (`users_name`, `users_surname`, `users_patronymic`, `passport`, `birthday`, `address`, `phone`, `card_number`, `users_id`, `login`, `password`, `role`) VALUES ('Анна', 'Самусева', 'Сергеевна', 'АВ2824845', '27-12-1997', 'Майская, д.14 кв.90', '375297226164', '000000001', '2', 'anna', '1997anna', 'librarian');"+
-	//     "INSERT INTO `library`.`users` (`users_name`, `users_surname`, `users_patronymic`, `passport`, `birthday`, `address`, `phone`, `card_number`, `users_id`, `login`, `password`, `role`) VALUES ('Евгений', 'Козлов', 'Николаевич', 'СВ2556698', '28-10-1995', 'Кавалерийская д.15, кв.105', '375298566589, 80295695956', '000000002', '2', 'evg', '123', 'user');"+ 
-	//     "INSERT INTO `library`.`users` (`users_name`, `users_surname`, `users_patronymic`, `passport`, `birthday`, `address`, `phone`, `card_number`, `users_id`, `login`, `password`, `role`) VALUES ('митрий', 'Осин', 'Павлович', 'АВ2625269', '28-05-1996', 'ул.Елецкая, д.3, кв.18', '79033161480', '000000003', '3', 'dimon', '1', 'admin');", function(err){
-	//         if (err) throw err;
-	//         console.log("Table users is initialized");
-	//     });
-	// }
+	}
 };
 
 module.exports = booksData;

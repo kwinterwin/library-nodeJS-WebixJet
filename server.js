@@ -56,12 +56,17 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-app.post("/server/books", books.addData);
-app.post("/server/upload", upload.single("upload"), books.addFiles);
+app.post("/server/books", upload.single("upload"), books.addData);
+app.get("/server/books", books.allFiles);
+app.delete("/server/books/:id", books.deleteBook);
+
 app.post("/server/login", users.login);
 app.post("/server/login/status", users.loginStatus);
 app.post("/server/logout", users.logout);
 app.post("/server/login/authorization", users.authorization);
+app.get("/server/users", users.getAllUsers);
+app.put("/server/users",users.editData);
+app.post("/server/users", users.addData);
 // app.put("/server/users/:id", users.saveData);
 
 

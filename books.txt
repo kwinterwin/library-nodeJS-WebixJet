@@ -1,0 +1,7 @@
+INSERT INTO library.books (book_name, page_amount, year, author_surname, author_name, author_patronymic, publisher, publish_country, genres, amount_paper_book) values ('Мастер и Маргарита', "560", "1928", "Булгаков", "Михаил", "Афанасьевич", "Вече", "Испания", "Роман", "12");
+UPDATE library.books SET picture='master_and_margarita.jpg' WHERE book_id = 1;
+UPDATE library.books SET files='kerjlekjrg.txt, выауацу.txt, ' WHERE book_id = 1;
+UPDATE library.books SET audio='eduard_asadov_stihi_-_dusha_eduard_asadov_(zf.fm).mp3, ' WHERE book_id = 1;
+INSERT INTO library.books (book_name, page_amount, year, author_surname, author_name, author_patronymic, publisher, publish_country, genres, amount_paper_book) values ('Евгений Онегин', "458", "1823", "Пушкин", "Александр", "Сергеевич", "Вече", "Испания", "Роман,Поэзия", "20");
+UPDATE library.books SET picture='cover1.jpg' WHERE book_id = 2;
+UPDATE library.books SET files='evgenij-onegin.pdf, ' WHERE book_id = 2;
