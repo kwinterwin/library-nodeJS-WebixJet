@@ -15,7 +15,7 @@ export default class BookTemplateView extends JetView{
 				if(obj.hasOwnProperty("book_name")){
 					return `
 				            <div class='flex'>
-				                <div><img style='width:50%; display:block; margin:2% auto;' src='/server/${obj.picture}'/></div>
+				                <div><img style='width:30%; display:block; margin:2% auto;' src='/server/${obj.picture}'/></div>
 				                <div class='information'>
 				                    <div><span>Название книги: ${obj.book_name}</span></div>
 				                    <div><span>Автор: ${obj.author_surname} ${obj.author_name} ${obj.author_patronymic}</span></div>
@@ -49,6 +49,8 @@ export default class BookTemplateView extends JetView{
 			}
 		};
         
+        
+        
 		const comments = {
 			view:"form",
 			localId:"form",
@@ -72,7 +74,7 @@ export default class BookTemplateView extends JetView{
 						let comment = this.$$("commArea").getValue();
 						webix.ajax().post("/server/comments", {book_id:id, users_id:dataUser.users_id, comment: comment});
 						webix.ajax().get("/server/comments", {book_id:id}, (result)=>{
-							this.$$("list").parse(result);
+							this.$$("tree").parse(result);
 						});
 					}
 				}
@@ -97,13 +99,12 @@ export default class BookTemplateView extends JetView{
 					value:"Отправить",
 					inputWidth:300,
 					click:()=>{
-						let listId = this.getId();
-						let data = this.$$("list").getItem(listId);
+						let data = this.$$("tree").getSelectedItem();
 						let id = this.getUrl()[0].params.id;
 						const user = this.app.getService("user");
 						let dataUser = user.getUser();
 						let comment = this.$$("answerArea").getValue();
-						webix.ajax().post("/server/comments", {book_id:id, users_id:dataUser.users_id, comment: comment, id_answer:data.id_com});
+						webix.ajax().post("/server/comments", {book_id:id, users_id:dataUser.users_id, comment: comment, id_answer:data.id});
 					}
 				},
 				{
@@ -118,19 +119,15 @@ export default class BookTemplateView extends JetView{
 			]
 		};
         
-		const commTemplate = {
-			view:"list",
-			localId:"list",
-			template:(obj)=>{
-				return `
-                <div><b>${obj.login}</b><span class='fa fa-pencil answer' title='Ответить' style='cursor:pointer; font-size:25px; margin-left:20px;'></span></div>
-                <div><span>${obj.comment}</span></div>`;
-			},
-			onClick:{
-				answer:(e, id)=>{
+		let commTemplate = { 
+			view: "tree",
+			localId:"tree",
+			template:"<span><b>#login#:</b></span> <span>#value#</span>",
+			select:true,
+			on:{
+				onAfterSelect:()=>{
 					this.$$("answerForm").show();
 					this.$$("form").hide();
-					this.setId(id);
 					return false;
 				}
 			}
@@ -156,12 +153,6 @@ export default class BookTemplateView extends JetView{
 
 	}
     
-	setId(id){
-		this.id = id;}
-
-	getId(){
-		return this.id;
-	}
 
 	init(){
 		let id = this.getParam("id");
@@ -169,7 +160,7 @@ export default class BookTemplateView extends JetView{
 			this.$$("template").parse(result);
 		});
 		webix.ajax().get("/server/comments", {book_id:id}, (result)=>{
-			this.$$("list").parse(result);
+			this.$$("tree").parse(result);
 		});
 	}
 

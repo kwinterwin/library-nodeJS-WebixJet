@@ -32,14 +32,37 @@ let commentsData = {
 	getData(req, res){
 		con.con.query(`SELECT c.*, u.login FROM library.comments c, library.users u where c.users_id=u.users_id and book_id=${req.query.book_id}`, (err, result)=>{
 			if (err) throw err;
-			res.send(result);
+			let mapComm = new Map();
+			let obj = "";
+			
+			for(let i=0;i<result.length;i++){
+				obj = { id:result[i].id_com, value:result[i].comment, open:"true", login:result[i].login };
+				if(result[i].id_answer == null){
+					mapComm.set(result[i].id_com, obj);
+				}
+				else{
+					let comment = mapComm.get(result[i].id_answer);
+					comment.data = [];
+					comment.data.push(obj);
+				}
+				
+			}
+			let response = [];
+			for(let amount of mapComm.values()) {
+				response.push(amount);
+			}
+			res.send(response);
+			// console.log(response);
+			// console.log(result);
+			// res.send(result);
 		});
 	},
 	
 	addData(req,res){
 		req.body = JSON.parse(JSON.stringify(req.body));
 		if(req.body.hasOwnProperty("id_answer")){
-			con.con.query(`insert into comments (users_id, book_id, comment, id_answer) values (${req.body.users_id}, ${req.body.book_id}, '${req.body.comment}', ${req.body.id_answer})`, (err)=>{
+			let query = `insert into comments (users_id, book_id, comment, id_answer) values (${req.body.users_id}, ${req.body.book_id}, '${req.body.comment}', ${req.body.id_answer})`;
+			con.con.query(query, (err)=>{
 				if(err) throw err;
 				res.send({});
 			});
