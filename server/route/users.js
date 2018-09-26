@@ -28,9 +28,9 @@ let usersData = {
 
 	startInitTable(con){
 		let data = [
-			"INSERT INTO `library`.`users` (`users_name`, `users_surname`, `users_patronymic`, `passport`, `birthday`, `address`, `phone`, `card_number`, `users_id`, `login`, `password`, `role`) VALUES ('Анна', 'Самусева', 'Сергеевна', 'АВ2824845', '27-12-1997', 'Майская, д.14 кв.90', '375297226164', '000000001', '1', 'anna', '1997anna', 'librarian');",
-			"INSERT INTO `library`.`users` (`users_name`, `users_surname`, `users_patronymic`, `passport`, `birthday`, `address`, `phone`, `card_number`, `users_id`, `login`, `password`, `role`) VALUES ('Евгений', 'Козлов', 'Николаевич', 'СВ2556698', '28-10-1995', 'Кавалерийская д.15, кв.105', '375298566589, 80295695956', '000000002', '2', 'evg', '123', 'user');", 
-			"INSERT INTO `library`.`users` (`users_name`, `users_surname`, `users_patronymic`, `passport`, `birthday`, `address`, `phone`, `card_number`, `users_id`, `login`, `password`, `role`) VALUES ('Дмитрий', 'Осин', 'Павлович', 'АВ2625269', '28-05-1996', 'ул.Елецкая, д.3, кв.18', '79033161480', '000000003', '3', 'dimon', '1', 'admin');"
+			"INSERT INTO `library`.`users` (`users_name`, `users_surname`, `users_patronymic`, `passport`, `birthday`, `address`, `phone`, `card_number`, `users_id`, `login`, `password`, `role`) VALUES ('Анна', 'Самусева', 'Сергеевна', 'АВ2824845', '1997-12-27', 'Майская, д.14 кв.90', '375297226164', '000000001', '1', 'anna', '1997anna', 'librarian');",
+			"INSERT INTO `library`.`users` (`users_name`, `users_surname`, `users_patronymic`, `passport`, `birthday`, `address`, `phone`, `card_number`, `users_id`, `login`, `password`, `role`) VALUES ('Евгений', 'Козлов', 'Николаевич', 'СВ2556698', '1995-10-28', 'Кавалерийская д.15, кв.105', '375298566589, 80295695956', '000000002', '2', 'evg', '123', 'user');", 
+			"INSERT INTO `library`.`users` (`users_name`, `users_surname`, `users_patronymic`, `passport`, `birthday`, `address`, `phone`, `card_number`, `users_id`, `login`, `password`, `role`) VALUES ('Дмитрий', 'Осин', 'Павлович', 'АВ2625269', '1996-05-28', 'ул.Елецкая, д.3, кв.18', '79033161480', '000000003', '3', 'dimon', '1', 'admin');"
 		];
 		for(let i=0; i<data.length; i++){
 			con.query(data[i], function(err){
@@ -100,6 +100,18 @@ let usersData = {
 	getAllUsers(req,res){
 		if (req.query.hasOwnProperty("login")){
 			let query = `select * from users where login='${req.query.login}';`;
+			con.con.query(query, (err, result)=>{
+				if(err){
+					res.status(500).send(err);
+					console.log(err);
+				}
+				else{
+					res.send(result);
+				}
+			});
+		}
+		else if(req.query.hasOwnProperty("all")){
+			let query = `select * from users;`;
 			con.con.query(query, (err, result)=>{
 				if(err){
 					res.status(500).send(err);

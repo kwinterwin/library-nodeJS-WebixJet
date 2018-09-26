@@ -23,9 +23,7 @@ export default class Start extends JetView{
 			hidden:true,
 			data: [
 				{id: "editUserProfile", value: "Добавить пользователя"},
-				{id: "editProfile", value:"Редактирование профиля пользователей"},
-				{id: "appointLibrarian", value:"Назначить библиотекаря"},
-				{id: "changeRole", value:"Изменить роли пользователям"}	
+				{id: "editProfile", value:"Редактирование профиля"}
 			]
 		};
 
@@ -36,7 +34,6 @@ export default class Start extends JetView{
 			data: [
 				{id: "updateAmountPaperBook", value: "Обновить наличие книг"},
 				{id: "usersProfile", value:"Профили пользователей"},
-				{id: "bookOperation", value:"Операции с книгами"},
 				{id: "addNewBook", value:"Добавить новую книгу"},
 				{id: "deleteBook", value:"Удалить книгу"}		
 			]
@@ -49,9 +46,7 @@ export default class Start extends JetView{
 			data: [
 				{id: "bookReport", value: "Заказать книги"},
 				{id: "editUserProfile", value:"Редактирование личных данных"},
-				
-				// {id: "appointLibrarian", value:"Назначить библиотекаря"},
-				// {id: "changeRole", value:"Изменить роли пользователям"}	
+				{id: "tenBooks", value:"Все фильтры"},
 			]
 		};
 		

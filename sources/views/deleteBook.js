@@ -28,6 +28,7 @@ export default class DeleteBookView extends JetView{
 						cancel: "Назад",
 						callback:(result)=>{
 							if(result){
+								console.log(this.$$("datatable").getItem(id.row).id);
 								books.remove(this.$$("datatable").getItem(id.row).id);
 							}
 						}

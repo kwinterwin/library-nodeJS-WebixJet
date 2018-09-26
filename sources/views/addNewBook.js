@@ -103,6 +103,8 @@ export default class NewBookView extends JetView{
 							index++;
 						});
 						this.$$("audioUploader").send();
+
+						this.$$("form").clear();
 					});
 
 

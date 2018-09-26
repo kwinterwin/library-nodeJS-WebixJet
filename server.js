@@ -5,6 +5,8 @@ var mysql = require("mysql");
 const books = require("./server/route/books");
 const users = require("./server/route/users");
 const orders = require("./server/route/orders");
+const likes = require("./server/route/likes");
+const comments = require("./server/route/comments");
 var multer  = require("multer");
 
 let app = express();
@@ -59,6 +61,7 @@ var upload = multer({ storage: storage });
 app.post("/server/books", upload.single("upload"), books.addData);
 app.get("/server/books", books.allFiles);
 app.delete("/server/books/:id", books.deleteBook);
+app.put("/server/books/:id", books.updateItem);
 
 app.post("/server/login", users.login);
 app.post("/server/login/status", users.loginStatus);
@@ -67,7 +70,18 @@ app.post("/server/login/authorization", users.authorization);
 app.get("/server/users", users.getAllUsers);
 app.put("/server/users",users.editData);
 app.post("/server/users", users.addData);
+// app.get("/server/allUsers",)
 // app.put("/server/users/:id", users.saveData);
+
+app.post("/server/orders", orders.addOrder);
+app.get("/server/orders", orders.getAllData);
+app.delete("/server/orders", orders.deleteData);
+
+app.get("/server/likes", likes.getData);
+app.post("/server/likes", likes.setData);
+
+app.get("/server/comments", comments.getData);
+app.post("/server/comments", comments.addData);
 
 
 app.listen(port, ()=>{

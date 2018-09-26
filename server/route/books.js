@@ -6,7 +6,7 @@ let booksData = {
 	createTable(con){
 		con.query("CREATE TABLE if not exists `library`.`books` (" +
 		"`book_id` INT NOT NULL AUTO_INCREMENT," +
-		"`picture` VARCHAR(100) NULL," +
+		"`picture` VARCHAR(100) DEFAULT 'none.jpeg'," +
 		"`book_name` VARCHAR(100) NOT NULL," +
 		"`page_amount` INT NOT NULL," +
 		"`year` VARCHAR(4) NOT NULL," +
@@ -94,7 +94,97 @@ let booksData = {
 	},
 
 	allFiles(req,res){
-		con.con.query("select * from books", (err, result)=>{
+		if(req.query.hasOwnProperty("filter")){
+			if(req.query.filter=="old"){
+				con.con.query("select * from books order by year asc limit 10", (err, result)=>{
+					if(err){
+						res.status(500).send(err);
+						console.log(err);
+					}
+					else{
+						res.json(result);
+					}
+				});
+			}
+			else if(req.query.filter === "new"){
+				con.con.query("select * from books order by year desc limit 10", (err, result)=>{
+					if(err){
+						res.status(500).send(err);
+						console.log(err);
+					}
+					else{
+						res.json(result);
+					}
+				});
+			}
+			else if(req.query.filter === "long"){
+				con.con.query("select * from library.books order by page_amount desc limit 10", (err, result)=>{
+					if(err){
+						res.status(500).send(err);
+						console.log(err);
+					}
+					else{
+						res.json(result);
+					}
+				});
+			}
+			else if(req.query.filter === "nameLong"){
+				con.con.query("select * from library.books order by length(book_name) desc limit 10", (err, result)=>{
+					if(err){
+						res.status(500).send(err);
+						console.log(err);
+					}
+					else{
+						res.json(result);
+					}
+				});
+			}
+			else if(req.query.filter === "author"){
+				con.con.query("SELECT author_surname, author_name, author_patronymic FROM library.books group by author_surname order by count(book_name) desc limit 3;", (err, result)=>{
+					if(err){
+						res.status(500).send(err);
+						console.log(err);
+					}
+					else{
+						res.json(result);
+					}
+				});
+			}
+			else if(req.query.filter === "spanish"){
+				con.con.query("SELECT * FROM library.books where year between 1980 AND 2000 AND publish_country='Испания';", (err, result)=>{
+					if(err){
+						res.status(500).send(err);
+						console.log(err);
+					}
+					else{
+						res.json(result);
+					}
+				});
+			}
+			else if(req.query.filter === "files"){
+				con.con.query("SELECT * FROM library.books where not(audio is null) AND not(amount_paper_book is null) AND files is null;", (err, result)=>{
+					if(err){
+						res.status(500).send(err);
+						console.log(err);
+					}
+					else{
+						res.json(result);
+					}
+				});
+			}
+		}
+		else if(req.query.hasOwnProperty("book_id")){
+			con.con.query(`select * from books where book_id=${req.query.book_id}`, (err, result)=>{
+				if(err){
+					res.status(500).send(err);
+					console.log(err);
+				}
+				else{
+					res.json(result);
+				}
+			});
+		}
+		else {con.con.query("select * from books", (err, result)=>{
 			if(err){
 				res.status(500).send(err);
 				console.log(err);
@@ -103,6 +193,7 @@ let booksData = {
 				res.json(result);
 			}
 		});
+		}
 	},
 
 	deleteBook(req,res){
@@ -114,6 +205,13 @@ let booksData = {
 			else{
 				res.json(result);
 			}
+		});
+	},
+
+	updateItem(req,res){
+		con.con.query(`UPDATE library.books set amount_paper_book=${req.body.amount_paper_book} where book_id=${req.body.book_id}`, (err, result)=>{
+			if(err) throw err;
+			else res.json(result);
 		});
 	}
 };
