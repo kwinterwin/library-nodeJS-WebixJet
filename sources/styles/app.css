@@ -50,22 +50,23 @@
 	padding-left:10px;
 }
 
-.flex-container{
-	padding:20px 0px;
+.flex{
+	padding:20px 10px;
 	display: flex;
 	justify-content: flex-start;
-	align-items: stretch;
+	align-items: flex-start;
 }
 
-.flex-container div{
+.flex div{
 	flex-basis:50%;
 }
 
-.flex-container .information{
-	margin:30px;
-}
-
-.flex-container div span{
+.flex .information div span{
 	display:block;
 	margin:20px 0px;
 }
+
+
+.webix_list_item{
+	height:100px !important;
+} 

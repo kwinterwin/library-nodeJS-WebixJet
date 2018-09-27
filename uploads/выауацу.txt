@@ -1,0 +1,6 @@
+this.$$("datatable").getFilter("Name").value = "";
+						this.$$("datatable").getFilter("Year").value = "";
+						this.$$("datatable").getFilter("Author").value = "";
+						this.$$("datatable").getFilter("Category").value = "";
+						this.$$("datatable").clearAll();
+						this.$$("datatable").sync(books);

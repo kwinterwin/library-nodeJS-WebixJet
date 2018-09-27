@@ -22,10 +22,8 @@ export default class Start extends JetView{
 			width:300,
 			hidden:true,
 			data: [
-				{id: "addUser", value: "Добавить пользователя"},
-				{id: "editProfile", value:"Редактирование профиля пользователей"},
-				{id: "appointLibrarian", value:"Назначить библиотекаря"},
-				{id: "changeRole", value:"Изменить роли пользователям"}	
+				{id: "editUserProfile", value: "Добавить пользователя"},
+				{id: "editProfile", value:"Редактирование профиля"}
 			]
 		};
 
@@ -36,7 +34,6 @@ export default class Start extends JetView{
 			data: [
 				{id: "updateAmountPaperBook", value: "Обновить наличие книг"},
 				{id: "usersProfile", value:"Профили пользователей"},
-				{id: "bookOperation", value:"Операции с книгами"},
 				{id: "addNewBook", value:"Добавить новую книгу"},
 				{id: "deleteBook", value:"Удалить книгу"}		
 			]
@@ -47,10 +44,9 @@ export default class Start extends JetView{
 			hidden:true,
 			localId:"userSidebar",
 			data: [
-				{id: "addUser", value: "Добавить пользователя"},
-				// {id: "editProfile", value:"Редактирование профиля пользователей"},
-				// {id: "appointLibrarian", value:"Назначить библиотекаря"},
-				// {id: "changeRole", value:"Изменить роли пользователям"}	
+				{id: "bookReport", value: "Заказать книги"},
+				{id: "editUserProfile", value:"Редактирование личных данных"},
+				{id: "tenBooks", value:"Все фильтры"},
 			]
 		};
 		
@@ -61,8 +57,11 @@ export default class Start extends JetView{
 					cols:[
 						{ 
 							rows:[
-								admin_sidebar, user_sidebar, librarian_sidebar,
-								{height:1}]
+								admin_sidebar, 
+								user_sidebar, 
+								librarian_sidebar,
+								{height:1}
+							]
 						},
 						{$subview:true}
 					]
@@ -79,8 +78,6 @@ export default class Start extends JetView{
 		this.use(plugins.Menu, "userSidebar");
 		const user = this.app.getService("user");
 		let dataUser = user.getUser();
-		// console.log(dataUser);
-		// this.$$("nameLabel").setValue(`Hi, ${dataUser.name}`);
 		if(dataUser.role === "user"){
 			this.$$("userSidebar").show();
 		}
