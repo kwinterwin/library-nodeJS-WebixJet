@@ -37,7 +37,6 @@ con.query("create database if not exists library ", function (err) {
 });
 
 
-
 app.use("/server", express.static("uploads"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({
@@ -70,8 +69,6 @@ app.post("/server/login/authorization", users.authorization);
 app.get("/server/users", users.getAllUsers);
 app.put("/server/users",users.editData);
 app.post("/server/users", users.addData);
-// app.get("/server/allUsers",)
-// app.put("/server/users/:id", users.saveData);
 
 app.post("/server/orders", orders.addOrder);
 app.get("/server/orders", orders.getAllData);

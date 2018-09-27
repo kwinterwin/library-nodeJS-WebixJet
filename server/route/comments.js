@@ -1,33 +1,24 @@
-const fs = require ("fs");
+
 const con = require("../../server");
 
 let commentsData = {
-
-	// createTable(con){
-	// 	con.query("CREATE TABLE if not exists `library`.`books` (" +
-	// 	"`book_id` INT NOT NULL AUTO_INCREMENT," +
-	// 	"`picture` VARCHAR(100) DEFAULT 'none.jpeg'," +
-	// 	"`book_name` VARCHAR(100) NOT NULL," +
-	// 	"`page_amount` INT NOT NULL," +
-	// 	"`year` VARCHAR(4) NOT NULL," +
-	// 	"`author_surname` VARCHAR(45) NULL," +
-	// 	"`author_name` VARCHAR(20) NOT NULL," +
-	// 	"`author_patronymic` VARCHAR(45) NULL," +
-	// 	"`publisher` VARCHAR(45) NOT NULL," +
-	// 	"`publish_country` VARCHAR(20) NOT NULL," +
-	// 	"`genres` VARCHAR(100) NOT NULL," +
-	// 	"`amount_paper_book` INT NOT NULL," +
-	// 	"`files` VARCHAR(600) NULL," +
-	// 	"`audio` VARCHAR(600) NULL," +
-	// 	"`rating` INT DEFAULT '0'," +
-	// 	"PRIMARY KEY (`book_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;", (err,result)=>{
-	// 		if (err) throw err;
-	// 		if(result.warningCount === 0){
-	// 			console.log("Table 'books' is created");
-	// 			this.startInitTable();
-	// 		}	
-	// 	});
-	// },
+	
+	createTable(con){
+		con.query("CREATE TABLE `comments` ("+
+		"`id_com` int(11) NOT NULL AUTO_INCREMENT,"+
+		"`id_answer` int(11) DEFAULT NULL,"+
+		"`comment` varchar(200) NOT NULL,"+
+		"`users_id` int(11) NOT NULL,"+
+		"`book_id` int(11) NOT NULL,"+
+		"PRIMARY KEY (`id_com`)"+
+		") ENGINE=InnoDB DEFAULT CHARSET=latin1;", (err,result)=>{
+			if (err) throw err;
+			if(result.warningCount === 0){
+				console.log("Table 'comments' is created");
+				this.startInitTable();
+			}	
+		});
+	},
     
 	getData(req, res){
 		con.con.query(`SELECT c.*, u.login FROM library.comments c, library.users u where c.users_id=u.users_id and book_id=${req.query.book_id}`, (err, result)=>{
@@ -52,9 +43,6 @@ let commentsData = {
 				response.push(amount);
 			}
 			res.send(response);
-			// console.log(response);
-			// console.log(result);
-			// res.send(result);
 		});
 	},
 	

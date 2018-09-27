@@ -1,20 +1,21 @@
 const con = require("../../server");
   
 let likesData = {
-	// createTable(con){
-	// 	con.query("CREATE TABLE if not exists `library`.`orders` (" +
-	//     "  `contact_id` INT NOT NULL," +
-	//     "  `order_id` INT NOT NULL AUTO_INCREMENT," +
-	//     "  `book_id` INT NOT NULL," +
-	//     "  `order_date` VARCHAR(30) NOT NULL," +
-	//     "  PRIMARY KEY (`order_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;", function(err, result){
-	// 		if (err) throw err;
-	// 		if(result.warningCount === 0){
-	// 			console.log("Table 'orders' is created");
-	// 		}	
+
+	createTable(con){
+		con.query("CREATE TABLE `likes` ("+
+		"`like_id` int(11) NOT NULL AUTO_INCREMENT,"+
+		"`users_id` int(11) NOT NULL,"+
+		"`book_id` int(11) NOT NULL,"+
+		"PRIMARY KEY (`like_id`)"+
+		") ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;", function(err, result){
+			if (err) throw err;
+			if(result.warningCount === 0){
+				console.log("Table 'likes' is created");
+			}	
 			
-	// 	});
-	// },
+		});
+	},
     
 	getData(req,res){
 		con.con.query(`select count(users_id) as count from likes where users_id=${req.query.users_id} AND book_id=${req.query.book_id}`, (err,result)=>{
